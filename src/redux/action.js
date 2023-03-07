@@ -32,3 +32,29 @@ export function showComplete(index) {
     type: SHOW_COMPLETE,
   };
 }
+
+//users
+
+export const GET_USERS_START = 'GET_USERS_START'; //깃허브 api 호출을 시작함
+export const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS'; //깃허브 api 호출을 성공함
+export const GET_USERS_FAIL = 'GET_USERS_FAIL'; //깃허브 api 호출을 성공함
+
+export function getUsersStart() {
+  return {
+    type: GET_USERS_START,
+  };
+}
+
+export function getUsersSuccess(data) {
+  return {
+    type: GET_USERS_SUCCESS,
+    data,
+  };
+}
+
+export function getUsersFail(error) {
+  return {
+    type: GET_USERS_FAIL,
+    error,
+  };
+}

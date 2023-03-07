@@ -1,10 +1,10 @@
-import useReduxState from '../hooks/useReduxState';
-
-export default function TodoList() {
-  const state = useReduxState();
+// import { connect } from 'react-redux';
+// import useReduxState from '../hooks/useReduxState';
+export default function TodoList({ todos }) {
+  // const state = useReduxState();
   return (
     <ul>
-      {state.todos.map((todo, index) => {
+      {todos.map((todo, index) => {
         return <li key={index}>{todo.text}</li>;
       })}
     </ul>
