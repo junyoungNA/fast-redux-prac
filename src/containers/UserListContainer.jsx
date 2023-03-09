@@ -7,6 +7,7 @@ import {
   getUsersThunk,
   getUsersPromise,
 } from '../redux/modules/users';
+import { getUsersSagaStart } from '../redux/modules/users';
 // import axios from 'axios';
 
 export default function UserListContainer() {
@@ -42,7 +43,8 @@ export default function UserListContainer() {
 
   const getUsers = useCallback(() => {
     // dispatch(getUsersThunk());
-    dispatch(getUsersPromise());
+    dispatch(getUsersSagaStart());
+    // dispatch(getUsersPromise());
   }, [dispatch]);
 
   return <UserList users={users} getUsers={getUsers} />;

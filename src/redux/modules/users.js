@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { put, delay, call, takeEvery } from 'redux-saga/effects';
 
 //엑션 타입 정의
 const GET_USERS_START = 'redux-start/users/GET_USERS_START'; //깃허브 api 호출을 시작함
@@ -89,13 +90,25 @@ export default function reducer(state = initialState, action) {
   return state;
 }
 
+function sleep(ms) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+}
+
 //thunk
 export function getUsersThunk() {
-  return async dispatch => {
+  return async (dispatch, getState, { history }) => {
     try {
+      console.log(history);
       dispatch(getUsersStart());
+      //sleep
+      await sleep(2000);
       const res = await axios.get('https://api.github.com/users');
       dispatch(getUsersSuccess(res.data));
+      history.push('/');
     } catch (error) {
       dispatch(getUsersSuccess(error));
     }
@@ -111,4 +124,30 @@ export function getUsersPromise() {
       return res.data;
     },
   };
+}
+
+//redux-saga
+const GET_USERS_SAGA_START = 'GET_USERS_SAGA_START';
+
+function* getUsersSaga(action) {
+  try {
+    yield put(getUsersStart());
+    //sleep
+    yield delay(2000);
+    const res = yield call(axios.get, 'https://api.github.com/users');
+    yield put(getUsersSuccess(res.data));
+    // yield put(push('/'));
+  } catch (error) {
+    yield put(getUsersSuccess(error));
+  }
+}
+
+export function getUsersSagaStart() {
+  return {
+    type: GET_USERS_SAGA_START,
+  };
+}
+
+export function* usersSaga() {
+  yield takeEvery(GET_USERS_SAGA_START, getUsersSaga);
 }

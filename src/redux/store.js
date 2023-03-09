@@ -3,6 +3,11 @@ import todoApp from './modules/reducer';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
+import history from '../history';
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from './modules/rootSaga';
+
+const sagaMiddleware = createSagaMiddleware();
 
 //리덕스 미들웨어 = 함수 function
 //미들웨어가 여러개면 미들웨어가 순차적으로 실행됨
@@ -43,9 +48,18 @@ import promise from 'redux-promise-middleware';
 //액션 생성자가 액션을 리턴하지 않고, 함수를 리턴함
 
 // const store = createStore(todoApp, applyMiddleware(middleware1, middleware2)); //두번째 인자에 인핸서 라는걸 추가할 수 있음?
+
 const store = createStore(
   todoApp,
-  composeWithDevTools(applyMiddleware(thunk, promise))
+  composeWithDevTools(
+    applyMiddleware(
+      thunk.withExtraArgument({ history }),
+      promise,
+      sagaMiddleware
+    )
+  )
 ); //두번째 인자에 인핸서 라는걸 추가할 수 있음?
+
+sagaMiddleware.run(rootSaga);
 
 export default store;
